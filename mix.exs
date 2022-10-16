@@ -83,6 +83,9 @@ defmodule NervesLivebook.MixProject do
       {:vega_lite, "~> 0.1"},
       {:vintage_net_mobile, "~> 0.11", targets: @cellular_targets},
       {:vintage_net_qmi, "~> 0.3", targets: @cellular_targets},
+      {:oled, path: "../oled", targets: @all_targets},
+      {:lcd_display, path: "../lcd_display", targets: @all_targets},
+      {:chisel, "~> 0.2.0"},
 
       # Nerves system dependencies
       {:nerves_system_rpi, "~> 1.18", runtime: false, targets: :rpi},
@@ -98,6 +101,8 @@ defmodule NervesLivebook.MixProject do
       {:nerves_system_grisp2, "~> 0.2", runtime: false, targets: :grisp2},
       {:nerves_system_mangopi_mq_pro, "~> 0.2.4", runtime: false, targets: :mangopi_mq_pro},
       {:nerves_system_srhub, "~> 0.25", runtime: false, targets: :srhub},
+      {:nerves_system_rpi_wifi,
+       path: "../custom_rpi", runtime: false, targets: :rpi_wifi, nerves: [compile: true]},
 
       # Compile-time only
       {:credo, "~> 1.6", only: :dev, runtime: false},
