@@ -54,12 +54,6 @@ defmodule NervesLivebook.UIScreen do
     VintageNet.subscribe(["connection"])
     value = VintageNet.get(["connection"])
 
-    # Start it
-    display_pid = case MyApp.MyDisplay.start_link([]) do
-      { :ok, pid } -> pid
-      { :error, { :already_started, pid } } -> pid
-    end
-
     write_only("Connecting.")
 
     {:ok, :no_state}
