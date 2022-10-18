@@ -10,7 +10,9 @@ config :shoehorn, init: [:nerves_runtime, :nerves_pack]
 # See https://hexdocs.pm/ring_logger/readme.html for more information on
 # configuring ring_logger.
 
-config :logger, backends: [RingLogger, RamoopsLogger]
+config :logger,
+  backends: [RingLogger, RamoopsLogger],
+  level: :warning
 
 # Erlinit can be configured without a rootfs_overlay. See
 # https://github.com/nerves-project/erlinit/ for more information on

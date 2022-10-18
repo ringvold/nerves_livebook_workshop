@@ -83,7 +83,7 @@ defmodule NervesLivebook.MixProject do
       {:vega_lite, "~> 0.1"},
       {:vintage_net_mobile, "~> 0.11", targets: @cellular_targets},
       {:vintage_net_qmi, "~> 0.3", targets: @cellular_targets},
-      {:oled, path: "../oled", targets: @all_targets},
+      {:oled, "~> 0.3.5", github: "ringvold/oled", targets: @all_targets},
       {:lcd_display, path: "../lcd_display", targets: @all_targets},
       {:chisel, "~> 0.2.0"},
 
