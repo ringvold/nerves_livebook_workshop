@@ -11,9 +11,6 @@ defmodule NervesLivebook.Application do
     setup_wifi()
     add_mix_install()
 
-    # Background one shot task showing the ip to a connected screen
-    Task.start(fn -> show_ip() end)
-
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: NervesLivebook.Supervisor]
@@ -23,7 +20,8 @@ defmodule NervesLivebook.Application do
     children =
       [
         {Delux, delux_options},
-        NervesLivebook.UI
+        NervesLivebook.UI,
+        NervesLivebook.UIScreen
       ] ++ target_children(Nerves.Runtime.mix_target())
 
     Supervisor.start_link(children, opts)
@@ -101,87 +99,4 @@ defmodule NervesLivebook.Application do
 
   defp target_children(:srhub), do: [NervesLivebook.WiFiMonitor]
   defp target_children(_), do: []
-
-  defp show_ip() do
-    # Create a display module
-    # https://hexdocs.pm/chisel/readme.html
-    # fork of: https://github.com/pappersverk/oled
-    defmodule MyApp.MyDisplay do
-      use OLED.Display, app: :my_app
-    end
-
-    # Add the configuration
-    Application.put_env(:my_app, MyApp.MyDisplay,
-      device: "i2c-1",
-      driver: :ssd1306,
-      type: :i2c,
-      width: 128,
-      height: 32,
-      rst_pin: 25,
-      dc_pin: 24,
-      address: 0x3C
-    )
-
-
-    # Start it
-    case MyApp.MyDisplay.start_link([]) do
-      {:ok, pid} -> 1
-      {:error, {:already_started, pid}} -> 1
-    end
-    # Pixel draw function
-    put_pixel = fn x, y ->
-      MyApp.MyDisplay.put_pixel(x, y)
-    end
-
-    # Load font
-    {:ok, font} = Chisel.Font.load("/fonts/cure.bdf")
-
-
-    write_only = fn text ->
-      MyApp.MyDisplay.clear()
-
-      Chisel.Renderer.draw_text(text, 10, 10, font, put_pixel, size_x: 2, size_y: 2)
-
-      MyApp.MyDisplay.display()
-    end
-
-    clear_screen = fn ->
-      MyApp.MyDisplay.clear()
-      MyApp.MyDisplay.display()
-    end
-
-    get_ip = fn ->
-      inets = VintageNet.get(["interface", "wlan0", "addresses"])
-        |> Enum.filter(fn x -> x[:family] == :inet end)
-        |> Enum.at(0)
-
-      case inets do
-        nil ->
-          {:error, nil}
-        found ->
-          result = found
-            |> Map.fetch!(:address)
-            |> Tuple.to_list()
-            |> Enum.map(fn x -> Integer.to_string(x) end)
-            |> Enum.join(".")
-
-          {:ok, result}
-      end
-    end
-
-    poll_ip = fn (me) ->
-      case get_ip.() do
-        {:ok, result} -> result
-        {:error, _} ->
-          Process.sleep(500)
-          me.()
-      end
-    end
-
-    write_only.("Connecting.")
-    Process.sleep(500)
-    write_only.(poll_ip.(poll_ip))
-    Process.sleep(10000)
-    clear_screen.()
-  end
 end
