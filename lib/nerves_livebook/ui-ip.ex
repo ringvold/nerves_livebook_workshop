@@ -25,28 +25,26 @@ defmodule NervesLivebook.UISCreen do
   )
 
   # Pixel draw function
-  put_pixel = fn x, y ->
+  defp put_pixel(x, y) do
     MyApp.MyDisplay.put_pixel(x, y)
   end
 
-  # Load font
-  {:ok, font} = Chisel.Font.load("/fonts/cure.bdf")
-
-
-  write_only = fn text ->
+  defp write_only(text) do
+    # Load font
+    {:ok, font} = Chisel.Font.load("/fonts/cure.bdf")
     MyApp.MyDisplay.clear()
 
-    Chisel.Renderer.draw_text(text, 10, 10, font, put_pixel, size_x: 2, size_y: 2)
+    Chisel.Renderer.draw_text(text, 10, 10, font, self.put_pixel, size_x: 2, size_y: 2)
 
     MyApp.MyDisplay.display()
   end
 
-  clear_screen = fn ->
+  defp clear_screen do
     MyApp.MyDisplay.clear()
     MyApp.MyDisplay.display()
   end
 
-  get_ip = fn ->
+  defp get_ip do
     VintageNet.get(["interface", "wlan0", "addresses"])
       |> Enum.filter(fn x -> x[:family] == :inet end)
       |> Enum.at(0)
@@ -79,7 +77,7 @@ defmodule NervesLivebook.UISCreen do
       { :error, { :already_started, pid } } -> pid
     end
 
-    write_only.("Connecting.")
+    write_only("Connecting.")
 
     {:ok, :no_state}
   end
@@ -93,17 +91,17 @@ defmodule NervesLivebook.UISCreen do
   def handle_info(_, state), do: {:noreply, state}
 
   defp led_program(:internet) do
-    write_only.("Connected")
+    write_only("Connected")
     Process.sleep(1000)
-    write_only.(get_ip.())
+    write_only(get_ip.())
     Process.sleep(10000)
   end
   defp led_program(:lan) do
-    write_only.("lan")
+    write_only("lan")
     Process.sleep(3000)
   end
   defp led_program(_disconnected) do
-    write_only.("disconnected")
+    write_only("disconnected")
     Process.sleep(3000)
   end
 end
