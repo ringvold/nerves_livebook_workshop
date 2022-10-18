@@ -1,5 +1,7 @@
 # Blinkende LED-lys
 
+## Introduksjon
+
 I denne oppgaven er målet å bli kjent med LED-lysene som føgler med Raspberry Pi-boardet ditt.
 
 Alle LED-lysene befinner seg under `/sys/class/leds`, og for å verifisere dette kan vi liste ut det som eksisterer i `leds`-mappen gjennom å bruke `File.ls("/sys/class/leds")`.
@@ -38,7 +40,7 @@ File.write(Path.join(led, "trigger"), "none")
 File.write(Path.join(led, "brightness"), "0")
 ```
 
-Tilsvarende kan du skru lyset på igjen
+Tilsvarende kan du skru lyset på igjen.
 
 ```elixir
 File.write(Path.join(led, "brightness"), "1")
@@ -46,25 +48,49 @@ File.write(Path.join(led, "brightness"), "1")
 
 ## Blinking gjennom `trigger`
 
-Tidligere satte vi `trigger` til å være `none`. Vi kan bruke ulike triggere til å bestemme hvilke betingelser lyset skal skrus av og på med, og så fikser Linux-operativsystemet resten. Vi kan for eksempel velge en tidsbestemt trigger gjennom å angi verdier for `delay_on` og `delay_off` i millisekunder.
+Tidligere satte vi `trigger` til å være `none`. Vi kan bruke ulike triggere til å bestemme hvilke betingelser lyset skal skrus av og på med, og så fikser Linux-operativsystemet resten. For å finne ut hva slags trigger-snacks vi har å velge mellom kan vi lese innholdet i `trigger`-mappen.
+
+```elixir
+File.read!(Path.join(led, "trigger"))
+```
+
+Her finnes det en rekke ulike måter å kontrollere LED-lysene på, blant annet basert på CPU-aktivitet, diskaktivitet og WiFi-aktivitet. Velger du for eksempel triggeren `rfkill0` vet du at Raspberry Pi'en har internettforbindelse så lenge den valgte LED-en har konstant lys.
+
+Vi kan også sette et lysmønster som gjentas for alltid gjennom `timer`-triggeren.
 
 ```elixir
 File.write(Path.join(led, "trigger"), "timer")
-# ms (4 Hz)
-File.write(Path.join(led, "delay_on"), "250")
-# ms (1 Hz)
-File.write(Path.join(led, "delay_off"), "1000")
 ```
 
-Under `trigger`-mappen finnes det en rekke ulike måter å kontrollere LED-lysene på, blant annet basert på CPU-aktivitet, diskaktivitet og WiFi-aktivitet. Velger du for eksempel triggeren `rfkill0` vet du at Raspberry Pi'en har internettforbindelse så lenge den valgte LED-en har konstant lys
+Dette gir oss et lysmønster som flasher med ett sekunds mellomrom. Et annet lysmønster vi kan velge er `heartbeat`, mon tro hva det gjør? 🤔
 
 ```elixir
-File.write(Path.join(led, "trigger"), "rfkill0")
+File.write(Path.join(led, "trigger"), "heartbeat")
 ```
 
-For å styre LED-lyset med `brightness`-filen kan vi igjen sette `trigger` til `none`
+For å styre LED-lyset med `brightness`-filen kan vi igjen sette `trigger` til `none`.
 
 ```elixir
 File.write(Path.join(led, "trigger"), "none")
-File.read!(Path.join(led, "trigger"))
+File.read!(Path.join(led, "brightness"), "0")
 ```
+
+## (valgfritt) Lag ditt eget lysmønster
+
+Triggere for `heartbeat` og `timer` som pulserer med en fast frekvens er vel og bra, men det er liksom ikke _vårt_ lysmønster. Målet med denne oppgaven er å lage et eget mønster.
+
+Det er flere måter å få til dette på. Prøv litt på egenhånd – husk, internettet er din venn!
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+_Psst, her er et tips hvis du står fast!_
+
+_Én mulighet er å benytte `delay_on` og `delay_off` som ligger under hvert enkelt LED-lys. Dette krever at vi benytter `timer`-triggeren fra tidligere._
