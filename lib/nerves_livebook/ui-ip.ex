@@ -7,41 +7,24 @@ defmodule NervesLivebook.UIScreen do
 
   require Logger
 
-  # Create a display module
-  defmodule MyApp.MyDisplay do
-    use OLED.Display, app: :my_app
-  end
-
-  # Add the configuration
-  Application.put_env(:my_app, MyApp.MyDisplay,
-    device: "i2c-1",
-    driver: :ssd1306,
-    type: :i2c,
-    width: 128,
-    height: 32,
-    rst_pin: 25,
-    dc_pin: 24,
-    address: 0x3C
-  )
-
   # Pixel draw function
   defp put_pixel(x, y) do
-    MyApp.MyDisplay.put_pixel(x, y)
+    NervesLivebook.OLED.put_pixel(x, y)
   end
 
   defp write_only(text) do
     # Load font
     {:ok, font} = Chisel.Font.load("/fonts/cure.bdf")
-    MyApp.MyDisplay.clear()
+    NervesLivebook.OLED.clear()
 
     Chisel.Renderer.draw_text(text, 10, 10, font, self.put_pixel, size_x: 2, size_y: 2)
 
-    MyApp.MyDisplay.display()
+    NervesLivebook.OLED.display()
   end
 
   defp clear_screen do
-    MyApp.MyDisplay.clear()
-    MyApp.MyDisplay.display()
+    NervesLivebook.OLED.clear()
+    NervesLivebook.OLED.display()
   end
 
   defp get_ip do
