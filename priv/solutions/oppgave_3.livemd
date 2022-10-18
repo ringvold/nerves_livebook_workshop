@@ -1,0 +1,24 @@
+Løsningsforslaget baserer seg på Dew Point-målet, da luftfuktighet varierer i større grad enn temperatur. Her er det mange fasiter og måter å få gjennomført oppgaven på. Prøv gjerne med ulike triggers!
+
+```elixir
+led_base_path = "/sys/class/leds"
+led = Path.join(led_base_path, "led0")
+File.write(Path.join(led, "trigger"), "timer")
+{:ok, bmp} = BMP280.start_link(bus_name: "i2c-1", bus_address: 0x77)
+
+defmodule Sensor do
+  def run_infinitely(led, bmp) do
+    {:ok, measurement} = BMP280.measure(bmp)
+    delay = round(measurement.dew_point_c * 100))
+    IO.inspect Integer.to_string(delay) # Greit å ha for debugging! Endre gjerne på konstanten for å gi blinkingen et annet utslag.
+
+    File.write(Path.join(led, "delay_on"), Integer.to_string(delay)
+    File.write(Path.join(led, "delay_off"), Integer.to_string(delay)
+  
+    Process.sleep(delay) # Klarer du å gjette på hva denne lille hacken gjør? Spør din lokale Peter!
+    run_infinitely(led, bmp)
+  end
+end
+
+Sensor.run_infinitely(led, bmp)
+```
