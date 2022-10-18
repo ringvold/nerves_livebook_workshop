@@ -102,7 +102,7 @@ defmodule NervesLivebook.MixProject do
       {:nerves_system_mangopi_mq_pro, "~> 0.2.4", runtime: false, targets: :mangopi_mq_pro},
       {:nerves_system_srhub, "~> 0.25", runtime: false, targets: :srhub},
       {:nerves_system_rpi_wifi,
-       path: "../custom_rpi", runtime: false, targets: :rpi_wifi, nerves: [compile: true]},
+       github: "ringvold/nerves_system_rpi_wifi", runtime: false, targets: :rpi_wifi, nerves: [compile: true]},
 
       # Compile-time only
       {:credo, "~> 1.6", only: :dev, runtime: false},
