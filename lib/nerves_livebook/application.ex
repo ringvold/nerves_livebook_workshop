@@ -181,7 +181,7 @@ defmodule NervesLivebook.Application do
     write_only.("Connecting.")
     Process.sleep(500)
     write_only.(poll_ip.(poll_ip))
-    Process.sleep(5000)
+    Process.sleep(10000)
     clear_screen.()
   end
 end
