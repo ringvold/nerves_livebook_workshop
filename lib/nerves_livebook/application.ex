@@ -17,10 +17,24 @@ defmodule NervesLivebook.Application do
 
     delux_options = Application.get_env(:nerves_livebook, :delux_config, [])
 
+    # Add the configuration
+    Application.put_env(:nerves_livebook, NervesLivebook.OLED,
+      device: "i2c-1",
+      driver: :ssd1306,
+      type: :i2c,
+      width: 128,
+      height: 32,
+      rst_pin: 25,
+      dc_pin: 24,
+      address: 0x3C
+    )
+
     children =
       [
         {Delux, delux_options},
-        NervesLivebook.UI
+        NervesLivebook.OLED,
+        NervesLivebook.UI,
+        NervesLivebook.UIScreen
       ] ++ target_children(Nerves.Runtime.mix_target())
 
     Supervisor.start_link(children, opts)
