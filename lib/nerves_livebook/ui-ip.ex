@@ -17,7 +17,7 @@ defmodule NervesLivebook.UIScreen do
     {:ok, font} = Chisel.Font.load("/fonts/cure.bdf")
     NervesLivebook.OLED.clear()
 
-    Chisel.Renderer.draw_text(text, 10, 10, font, self.put_pixel, size_x: 2, size_y: 2)
+    Chisel.Renderer.draw_text(text, 10, 10, font, fn x, y -> put_pixel(x, y) end, size_x: 2, size_y: 2)
 
     NervesLivebook.OLED.display()
   end
@@ -70,7 +70,7 @@ defmodule NervesLivebook.UIScreen do
   defp led_program(:internet) do
     write_only("Connected")
     Process.sleep(1000)
-    write_only(get_ip.())
+    write_only(get_ip())
     Process.sleep(10000)
   end
   defp led_program(:lan) do
