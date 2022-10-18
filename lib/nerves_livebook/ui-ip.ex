@@ -69,17 +69,15 @@ defmodule NervesLivebook.UIScreen do
 
   defp led_program(:internet) do
     write_only("Connected")
-    Process.sleep(1000)
+    Process.sleep(500)
     write_only(get_ip())
     Process.sleep(10000)
   end
   defp led_program(:lan) do
     write_only("lan")
-    Process.sleep(3000)
   end
   defp led_program(_disconnected) do
     write_only("disconnected")
-    Process.sleep(3000)
   end
 end
 
