@@ -1,0 +1,70 @@
+# Blinkende LED-lys
+
+I denne oppgaven er målet å bli kjent med LED-lysene som føgler med Raspberry Pi-boardet ditt.
+
+Alle LED-lysene befinner seg under `/sys/class/leds`, og for å verifisere dette kan vi liste ut det som eksisterer i `leds`-mappen gjennom å bruke `File.ls("/sys/class/leds")`.
+
+```elixir
+led_base_path = "/sys/class/leds"
+File.ls(led_base_path)
+```
+
+Når vi kjører kodesnuttene ovenfor får vi tilbake en tuppel der første-elementet, `:ok`, indikerer at kommandoen returnerte et forventet resultat, altså `{:ok, ["led0", "led1", ...]}`. Dersom vi hadde forsøkt å lese en mappe som ikke eksisterer ville vi fått `{:error, :enoent}` i stedet, noe som gjør at vi kan håndtere feil uten å få kjøretidsproblemer. Dette medfører derimot at vi alltid må håndtere både vellykkede (`:ok`) og mislykkede (`:error`) resultater, som i tilfelle der man leser filer fra en kjent mappestruktur er litt overkill. Ved å heller benytte `File.ls!(...)` godtar vi kun `:ok` som resultat ved å kun returnere den vellykkede responsen, og kaster heller `File.Error` ved kjøretid dersom for eksempel mappen ikke eksisterer
+
+```elixir
+led_base_path = "/sys/class/leds"
+File.ls!(led_base_path)
+```
+
+## Endre LED-lysenes tilstand
+
+Vi kan nå velge ett av LED-lysene, for eksempel `led0`, og se hvilke valg vi har gjennom
+
+```elixir
+led = Path.join(led_base_path, "led0")
+File.ls!(led)
+```
+
+Her finner vi blant annet `brightness`, og vi kan lese av den nåværende `brightness`-verdien gjennom
+
+```elixir
+File.read(Path.join(led, "brightness"))
+```
+
+Vi ønsker nå å sørge for at det valgte LED-lyset er i en kjent tilstand (avskrudd) før vi begynner å leke med det. I vårt tilfelle gjøres dette ved å først sette `trigger`-typen til `none`, for deretter å sette `brightness` til `0`. Vi kan endre tilstanden til LED-lys ved å benytte `File.write/2` (her indikerer `/2` at funksjonen `File.write` tar inn to parametere). Første parameter er hele pathen til parameteren vi ønsker å oppdatere, andre parameter er den nye tilstanden/verdien vi ønsker å oppdatere til. Følg gjerne med på LED-lysene på din Raspberry Pi når du kjører disse kommandoene og se om det skjer en endring!
+
+```elixir
+File.write(Path.join(led, "trigger"), "none")
+File.write(Path.join(led, "brightness"), "0")
+```
+
+Tilsvarende kan du skru lyset på igjen
+
+```elixir
+File.write(Path.join(led, "brightness"), "1")
+```
+
+## Blinking gjennom `trigger`
+
+Tidligere satte vi `trigger` til å være `none`. Vi kan bruke ulike triggere til å bestemme hvilke betingelser lyset skal skrus av og på med, og så fikser Linux-operativsystemet resten. Vi kan for eksempel velge en tidsbestemt trigger gjennom å angi verdier for `delay_on` og `delay_off` i millisekunder.
+
+```elixir
+File.write(Path.join(led, "trigger"), "timer")
+# ms (4 Hz)
+File.write(Path.join(led, "delay_on"), "250")
+# ms (1 Hz)
+File.write(Path.join(led, "delay_off"), "1000")
+```
+
+Under `trigger`-mappen finnes det en rekke ulike måter å kontrollere LED-lysene på, blant annet basert på CPU-aktivitet, diskaktivitet og WiFi-aktivitet. Velger du for eksempel triggeren `rfkill0` vet du at Raspberry Pi'en har internettforbindelse så lenge den valgte LED-en har konstant lys
+
+```elixir
+File.write(Path.join(led, "trigger"), "rfkill0")
+```
+
+For å styre LED-lyset med `brightness`-filen kan vi igjen sette `trigger` til `none`
+
+```elixir
+File.write(Path.join(led, "trigger"), "none")
+File.read!(Path.join(led, "trigger"))
+```
