@@ -61,7 +61,7 @@ defmodule NervesLivebook.UIScreen do
 
   @impl GenServer
   def handle_info({VintageNet, ["connection"], _old, value, _meta}, state) do
-    Delux.render(led_program(value))
+    led_program(value)
     {:noreply, state}
   end
 
