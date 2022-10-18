@@ -1,4 +1,4 @@
-defmodule NervesLivebook.UISCreen do
+defmodule NervesLivebook.UIScreen do
   @moduledoc """
     # https://hexdocs.pm/chisel/readme.html
     # fork of: https://github.com/pappersverk/oled
