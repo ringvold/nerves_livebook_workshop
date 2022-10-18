@@ -1,0 +1,133 @@
+# Kontroller LED-lys med knapper
+
+## Introduksjon
+
+Nå som vi er blitt litt kjent med LED-lysene og kan styre lystilstanden programmatisk med Nerves, er neste oppgave å heller styre lystilstanden ved knappetrykk.
+
+## Fest en pHat-modul til Raspberry Pi-boardet
+
+For å kunne styre LED-lysene ved hjelp av knapper må vi først ha en knapp å trykke på. Finn derfor en `Qwiic pHat`-modul som du kan feste på I/O-pinsene til boardet – du vet, den lange, svarte raden med pinner som stikker opp. Husk å feste `Qwiic`-modulen slik at modulen peker innover kretskortet og ikke utover.
+
+![Qwiic pHat](https://user-images.githubusercontent.com/42011694/196502962-f3333ae8-a57b-4fa6-9729-40d258b43908.jpeg)
+
+`Qwiic`-modulen lar oss blant annet koble til sensorer, noe vi kommer til å få bruk for senere. I tillegg er det en knapp på `Qwiic`-boardet, og det er nettopp den vi skal bruke nå!
+
+## Tilkobling
+
+Fra tidligere av har vi koblet oss til det ene LED-lyset, og vi ønsker å bruke dette lyset også i denne oppgaven. I samme slengen kan vi sette `trigger` til none og skru av LED-lyset.
+
+```elixir
+led = "/sys/class/leds/led0"
+File.write(Path.join(led, "trigger"), "none")
+File.write(Path.join(led, "brightness"), "0")
+```
+
+Når vi nå har koblet på `Qwiic`-modulen forholder vi oss til kretskortets GPIO (general-purpose input/output) gjennom Circuits-biblioteket til Elixir, mer spesifikt det som har med [Elixir Circuits GPIO](https://github.com/elixir-circuits/circuits_gpio).
+
+Først og fremst må vi finne ut hvilken pin knappen mapper til. Rett under knappen på `Qwiic`-modulen står det "GPIO17", altså er det pin 17 vi ønsker å benytte. Vi kan deretter definere denne pinen til å være en input-pin gjennom `Circuits.GPIO.open/2` som tar inn pin-nummer og hvorvidt valgt pin skal være `:input` eller `:output`. I vårt tilfelle ønsker vi å styre lyset ved hjelp av knappen, og vi definerer derfor knappen som `:input`.
+
+```elixir
+button_pin = 17
+{:ok, button_input} = Circuits.GPIO.open(button_pin, :input)
+```
+
+Vi kan nå lese tilstanden til knappen, altså hvorvidt den er "aktivert"/trykket ned (`0`) eller ikke (`1`).
+
+```elixir
+button_state = Circuits.GPIO.read(button_input)
+```
+
+Test gjerne funksjonen ovenfor mens du holder knappen inne også!
+
+## Knappe-action
+
+På tide å styre LED-lyset med knappen vår! Først må vi velge hvilke deler av et knappetrykk som lar oss trigge kode. Vi kan velge mellom rising, falling eller begge deler. Til å begynne med ønsker vi å følge med på knappens tilstand både når vi trykker knappen inn og når vi slipper den, og velger derfor å sette `set_interrupts/2` til `:both`.
+
+```elixir
+Circuits.GPIO.set_interrupts(button_input, :both)
+```
+
+Nå ligger alt til rette for at vi skal kunne lytte til knappetrykk og endre lystilstanden. Vi vil gjerne at Raspberry Pi'en fortsetter å lytte etter knappetrykk så lenge vi ønsker, og vi trenger derfor en funksjon som kjører for alltid (hvert fall til vi eller noe annet stopper den). Dette kan vi oppnå gjennom Elixir-funksjoner.
+
+I Elixir grupperes funksjoner i moduler, og moduler oppretter vi gjennom `defmodule`. Et enkelt eksempel på en modul som inneholder en enkel hilse-funksjon er gitt nedenfor.
+
+```elixir
+defmodule Greeting do
+  def hello(name) do
+    IO.puts("Hello, #{name}!")
+  end
+end
+```
+
+Legg merke til at både funksjoner og moduler krever at vi wrapper innholdet i en `do ... end`-blokk. Vi kan kalle på funksjonen vår gjennom modulen.
+
+```elixir
+Greeting.hello("world")
+```
+
+Vi ønsker nå å lage en modul, `Button`, som tar i mot staten til `:circuits_gpio`. Dette oppnår vi ved å bruke `receive` – en innebygd måte for Elixir å ta imot meldinger vi kan case på. Circuits-biblioteket tar seg av å sende meldinger om knappens state, mens vi må sørge for å ta meldingene imot.
+
+Fra `:circuits_gpio` får vi 3 ulike parametere; hvilken GPIO-pin vi mottar en melding fra, la oss merke den `_pin`; tidspunkt for melding, la oss merke den `_timestamp`; selve knappetilstanden, la oss merke den `button_state`. I `Button`-modulen nedenfor lytter vi på meldinger fra `:circuits_gpio` og skriver ut `button_state` for hvert knappetrykk vi gjør.
+
+```elixir
+defmodule Button do
+  def listen_for_button_press() do
+    receive do
+      {:circuits_gpio, _p, _tidetiddidid, button_state} ->
+        IO.puts("Button state: #{button_state}")
+    end
+
+    listen_for_button_press() # kjør funksjonen vår for alltid
+  end
+end
+```
+
+Vi kan nå kjøre funksjonen i modulen vår og se hvilken knappe-state vi får skrevet ut gjennom `IO.puts/1`-funksjonen.
+
+```elixir
+Button.listen_for_button_press()
+```
+
+<br>
+<br>
+**_Obs! Når du er ferdig med denne oppgaven og går videre til neste er det viktig å kommentere ut eller slette kodeblokken ovenfor. Når vi skal evaluere kode videre evaluerer vi all koden vi allerede har skrevet først, og vi ender derfor opp i den uendelige loopen vi har laget ovenfor._**
+
+## Styr LED-lys med knappetrykk
+
+Oppgaven vår nå er å endre `Button`-modulen vår til å faktisk styre LED-lysene.
+
+**Legg til en funksjon i modulen nedenfor slik at LED-en lyser når vi holder knappen nede og er slukket ellers.**
+
+```elixir
+defmodule Button do
+  # ✨ Do your magic here ✨
+end
+```
+
+Og kjør den magiske funksjonen din nedenfor for å teste.
+
+```elixir
+# Button.your_magic_function()
+```
+
+<br>
+<br>
+**_Obs! Når du er ferdig med denne oppgaven og går videre til neste er det viktig å kommentere ut eller slette kodeblokken ovenfor. Når vi skal evaluere kode videre evaluerer vi all koden vi allerede har skrevet først, og vi ender derfor opp i den uendelige loopen vi har laget ovenfor._**
+
+## (Valgfritt) av og på ved nytt knappetrykk
+
+I forrige oppgave satte vi interrupt for knappen til å være både rising og falling gjennom `:both`. Dette gjorde at vi kunne håndtere staten både når vi trykker inn knappen og når vi slipper den.
+
+**I denne oppgaven er målet å tilpasse `Button`-modulen nedenfor til å at hvert knappetrykk endrer LED-tilstanden fra av til på og motsatt.**
+
+```elixir
+defmodule Button do
+  # ✨ Do your magic here ✨
+end
+```
+
+Og kjør den magiske funksjonen din nedenfor for å teste. Oppgaven er fullført når du kan trykke og slippe én gang for å få lyset til å gå på, og deretter trykke og slippe én gang til for å få lyset til å gå av igjen.
+
+```elixir
+# Button.your_magic_function()
+```
