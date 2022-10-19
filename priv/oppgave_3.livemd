@@ -96,9 +96,9 @@ Husker du oppgave 1? Selvsagt gjør du det! I kodeblokken under skal du skrive k
 ```
 ## Grafer på skjermen
 
-For å styre skjermen så har vi biblioteket oled https://github.com/pappersverk/oled. Dette lar oss tegne primitive figurer på skjermen som enkelt piksel, trekanter, linjer, osv. Vi har lastet inn biblioteket fra før av og det er tilgjengelig under `NervesLivebook.OLED`.
+For å styre skjermen så har vi biblioteket [oled](https://github.com/pappersverk/oled). Dette lar oss tegne primitive figurer på skjermen som enkelt piksel, trekanter, linjer, osv. Vi har lastet inn biblioteket fra før av og det er tilgjengelig under `NervesLivebook.OLED`.
 
-For å få til å vise komplekse ting some tekst(!) så kan vi kombinere det bilbioteket med Chisel https://hexdocs.pm/chisel/readme.html som for eksemepel kan oversette font og tekststrenger til piksler!
+For å få til å vise komplekse ting some tekst(!) så kan vi kombinere det bilbioteket med [Chisel](https://hexdocs.pm/chisel/readme.html) som for eksemepel kan oversette font og tekststrenger til punkter i to dimensjoner.
 
 ```elixir
 # En funksjon som tar imot kooardinat x og y og oversette det til en piksel på skjermen
@@ -127,4 +127,4 @@ TODO Vi kan starte med å skrive ut verdiene fra sensoren
 
 ### Grafe verdiene
 
-TODO For å lage en graf så trenger vi kun å forholde oss til de primitive operasjonene som oled bibliteket gir oss. Ta en titt på GitHub siden og se om du får tenget ut en strek eller to. Deretter kan vi begynne å kombinere fast utlesning av temperaturen og kontinuerlig oppdatering av grafen ut mot skjermen.
+TODO For å lage en graf så trenger vi kun å forholde oss til de primitive operasjonene som `oled` bibliteket gir oss. Ta en titt på GitHub siden og se om du får tenget ut en strek eller to. Deretter kan vi begynne å kombinere fast utlesning av temperaturen og kontinuerlig oppdatering av grafen ut mot skjermen.
