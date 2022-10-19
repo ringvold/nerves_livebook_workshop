@@ -98,7 +98,7 @@ Husker du oppgave 1? Selvsagt gjør du det! I kodeblokken under skal du skrive k
 
 For å styre skjermen så har vi biblioteket [oled](https://github.com/pappersverk/oled). Dette lar oss tegne primitive figurer på skjermen som enkelt pikseler, trekanter, linjer, osv. Vi har lastet inn biblioteket fra før av og det er tilgjengelig under `NervesLivebook.OLED`.
 
-For å få til å vise komplekse ting some tekst(!) så kan vi kombinere `oled` bilbioteket med [Chisel](https://hexdocs.pm/chisel/readme.html) som blant annet kan oversette tekststreng gitt en font til punkter i to dimensjoner.
+For å få til å vise komplekse ting some tekst(!) så kan vi kombinere `oled` bilbioteket med [Chisel](https://hexdocs.pm/chisel/readme.html) som oversetter tekststreng gitt en font til punkter i to dimensjoner.
 
 ```elixir
 # En funksjon som tar imot kooardinat x og y og oversette det til en piksel på skjermen
