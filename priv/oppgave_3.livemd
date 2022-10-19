@@ -119,7 +119,7 @@ Chisel.Renderer.draw_text("Hei verden!", 10, 10, font, put_pixel, size_x: 2, siz
 NervesLivebook.OLED.display()
 ```
 
-Forhåpentligvis så har du fått en liten hilsen nå. Som man ser så vet Chisel ingenting om hvordan skjermen fungerer og forholder seg kun til at den får en funksjon den kan bruke til å få tegnet noe. Videre er vi selve ansvarlig for å cleare'e skjermen og fortelle når den skal legge noe til på skjermen. Ta gjerne en titt på hva som skjer om du kommenterer ut disse enkeltvis.
+Forhåpentligvis så har du fått en liten hilsen nå. Som man ser så vet `Chisel` ingenting om hvordan skjermen fungerer og forholder seg kun til at den får en funksjon som i dette tilfellet tar seg av oversetting til `oled` bilbioteket. Videre er vi selv ansvarlig for å blanke eksisterende innehold på skjermen og fortelle når den skal tegne ut endringene til skjermen. Ta gjerne en titt på hva som skjer om du kommenterer ut disse kallene enkeltvis i koden ovenfor.
 
 ### Skrve verdier
 
