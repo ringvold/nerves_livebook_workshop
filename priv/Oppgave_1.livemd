@@ -4,7 +4,7 @@
 
 I denne oppgaven er målet å bli kjent med LED-lysene som føgler med Raspberry Pi-boardet ditt.
 
-Alle LED-lysene befinner seg under `/sys/class/leds`, og for å verifisere dette kan vi liste ut det som eksisterer i `leds`-mappen gjennom å bruke `File.ls("/sys/class/leds")`.
+Operativsystemet (Linux) gjør det mulig å endre på disse LED-lysene ved å skrive til filer på filsystemet. Filene for LED-lysene befinner seg under `/sys/class/leds`, og for å verifisere dette kan vi liste ut det som eksisterer i `leds`-mappen gjennom å bruke `File.ls("/sys/class/leds")`.
 
 ```elixir
 led_base_path = "/sys/class/leds"
