@@ -96,7 +96,7 @@ Husker du oppgave 1? Selvsagt gjør du det! I kodeblokken under skal du skrive k
 ```
 ## Grafer på skjermen
 
-For å styre skjermen så har vi biblioteket [oled](https://github.com/pappersverk/oled). Dette lar oss tegne primitive figurer på skjermen som enkelt piksel, trekanter, linjer, osv. Vi har lastet inn biblioteket fra før av og det er tilgjengelig under `NervesLivebook.OLED`.
+For å styre skjermen så har vi biblioteket [oled](https://github.com/pappersverk/oled). Dette lar oss tegne primitive figurer på skjermen som enkelt pikseler, trekanter, linjer, osv. Vi har lastet inn biblioteket fra før av og det er tilgjengelig under `NervesLivebook.OLED`.
 
 For å få til å vise komplekse ting some tekst(!) så kan vi kombinere `oled` bilbioteket med [Chisel](https://hexdocs.pm/chisel/readme.html) som blant annet kan oversette tekststreng gitt en font til punkter i to dimensjoner.
 
