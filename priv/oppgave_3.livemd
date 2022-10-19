@@ -109,7 +109,7 @@ end
 # Vi har en fontfil liggende fra før av som vi kan gjenbruke
 {:ok, font} = Chisel.Font.load("/fonts/cure.bdf")
 
-# Sørg for at skjermen start med ett blankt utgangspunkt
+# Sørg for at skjermen starter med ett blankt utgangspunkt
 NervesLivebook.OLED.clear()
 
 # Bruk Chisel til å oversette teksten til pikselpunkter
