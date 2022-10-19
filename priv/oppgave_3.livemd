@@ -1,0 +1,96 @@
+# Temperaturmåler
+
+## Introduction
+It's getting hot in here! 
+
+I denne oppgaven skal vi leke oss med en temperaturmåler. Vi skal bruke en sensor som måler nåværende temperatur og printer ut data til en visuell graf. Modulen vi skal benytte oss av heter BME280 og har ingen relasjon til masseødeleggende killer robots fra Terminator 🤖 Modulen kobles til den samme knappmodulen som ble brukt i forrige oppgave (pHat) gjennom modulens innebygde Qwiic Connect System. Ja, det er sånn "Qwiic" staves, jeg lover at jeg ikke er analfabet. For å komme igang, må vi først bruke en ledning fra posen vår og koble den fra pHat'en til temperatursensoren via portene markert "qwiic". Deretter må vi... nei, det var egentlig alt.
+
+## Setup
+Temperaturgrafen vår trenger noen biblioteker for å se fresh ut. Disse installeres gjennom [Mix](https://hexdocs.pm/mix/1.14/Mix.html). Det første biblioteket vi trenger er [`Vega-Lite`](https://github.com/vega/vega-lite), som er et bibliotek for å generere visualiseringer og grafer ved hjelp av data. Du kan legge passer'n tilbake i pennalet, med andre ord! [`Kino`](https://github.com/livebook-dev/kino) brukes av Livebook for å kunne rendre grafene pent i sanntid. Installer bibliotekene med kodesnutten under.
+
+```elixir
+Mix.install([
+  :bmp280,
+  {:kino, "~> 0.7.0"},
+  {:vega_lite, "~> 0.1.6"}
+])
+```
+
+Wow! I Elixir kan man også sette opp aliaser:
+
+```elixir
+alias VegaLite, as: Vl
+```
+
+## Sanity check og initialisering
+Nå som bibliotekene er installerte, bør du sjekke at sensoren dukker opp og er tilgjengelig for Livebook.
+
+```elixir
+Circuits.I2C.detect_devices()
+```
+
+Sensoren vil mest sannsynlig vises under adresse `0x77`, men den kan også ende opp på `0x76`. Om det er tilfellet, er du nødt til å endre verdien til `bus_address` i kodesnutten under.
+
+```elixir
+{:ok, bmp} = BMP280.start_link(bus_name: "i2c-1", bus_address: 0x77)
+```
+
+Ser alt bra ut? Heftig! Da kan vi begynne å måle temperatur. Helst ikke bruk sensoren til å sjekke om du har feber. Jeg kan ikke garantere dens renslighet.
+
+## Les data og generer en graf
+Å lese data fra sensoren gjøres enkelt med kommandoen under.
+
+```elixir
+BMP280.measure(bmp)
+```
+
+For å generere en graf basert på sanntidsdata, trengs derimot litt mer kode. Under ser du syntaksen for å generere en graf-widget 📈 Den bruker Vega-Lite for å sette opp widgeten med `Vl.new(...)`, og deretter Kino for å periodisk oppdatere widgeten med ny data.
+
+```elixir
+widget =
+  Vl.new(width: 700, height: 400, title: "BME280 Temperature & Dew Point")
+  |> Vl.mark(:line)
+  |> Vl.encode_field(:x, "x", title: "Sample #", type: :quantitative)
+  |> Vl.encode_field(:y, "y", title: "Celsius", type: :quantitative)
+  |> Vl.encode_field(:color, "key", type: :nominal, title: nil)
+  |> Kino.VegaLite.new()
+  |> tap(&Kino.render/1)
+
+Kino.VegaLite.periodically(widget, 100, 0, fn i ->
+  {:ok, measurement} = BMP280.measure(bmp)
+
+  points = [
+    %{key: "Temperature", x: i, y: measurement.temperature_c},
+    %{key: "Dew Point", x: i, y: measurement.dew_point_c}
+  ]
+
+  Kino.VegaLite.push_many(widget, points, window: 100)
+  {:cont, i + 1}
+end)
+```
+
+Kult! Prøv å varme opp sensoren med hånden din, pusten din, en klem, eller ved å gi den en god skuldermassasje etter en lang arbeidsdag. Om alt fungerer som det skal, bør du se temperaturen stige i sanntid. Om du er usikker på hva "Dew Point" betyr, har Bekk investert i internett til deg så du kan Google ting av en grunn.
+
+Da har vi gått gjennom det groveste. På tide å ha det litt gøy!
+
+## 𝕜𝕝𝕒𝕞𝕥
+BME280 måler ganske så mye. Prøv å finne ut hva mer du kan måle og hvordan du kan visualisere det! Alle measurements finner du ved å kjøre kodesnutten:
+
+```elixir
+BMP280.measure(bmp)
+```
+
+### Mekk noen nye grafer
+Se om du klarer å lage noen andre grafer! Sjekk [dokumentasjonen](https://vega.github.io/vega-lite/docs/) til Vega-Lite og [listen over eksempler](https://vega.github.io/vega-lite/examples/). Kanskje du blir inspirert? Hvis ikke kan du prøve deg på oppgaven under 🤓
+
+```elixir
+# Din heite graf her
+```
+
+### Tilbake til LED-tiden
+Husker du oppgave 1? Selvsagt gjør du det! I kodeblokken under skal du skrive kode for å få gode gamle `led_0` til å blinke tregere (eller raskere!) basert på sensorinput. Bruk hvilken measurement og LED-trigger du vil. Det er bare fantasien (og hardware (og tidsbegrensninger)) som setter grenser!
+
+
+```elixir
+# blink... blink... blink blink blinkblinkblink
+```
