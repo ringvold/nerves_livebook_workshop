@@ -73,7 +73,7 @@ Fra `:circuits_gpio` får vi 3 ulike parametere; hvilken GPIO-pin vi mottar en m
 defmodule Button do
   def listen_for_button_press() do
     receive do
-      {:circuits_gpio, _p, _tidetiddidid, button_state} ->
+      {:circuits_gpio, _p, _timestamp, button_state} ->
         IO.puts("Button state: #{button_state}")
     end
 
