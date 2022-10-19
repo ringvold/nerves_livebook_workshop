@@ -14,6 +14,17 @@ config :logger,
   backends: [RingLogger, RamoopsLogger],
   level: :warning
 
+# Add the configuration
+config :nerves_livebook, NervesLivebook.OLED,
+  device: "i2c-1",
+  driver: :ssd1306,
+  type: :i2c,
+  width: 128,
+  height: 32,
+  rst_pin: 25,
+  dc_pin: 24,
+  address: 0x3C
+
 # Erlinit can be configured without a rootfs_overlay. See
 # https://github.com/nerves-project/erlinit/ for more information on
 # configuring erlinit.

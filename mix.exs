@@ -4,7 +4,7 @@ defmodule NervesLivebook.MixProject do
   @app :nerves_livebook
   @version "0.7.0"
 
-  @rpi_targets [:rpi, :rpi0, :rpi2, :rpi3, :rpi3a, :rpi4]
+  @rpi_targets [:rpi, :rpi_wifi, :rpi0, :rpi2, :rpi3, :rpi3a, :rpi4]
   @all_targets @rpi_targets ++
                  [:bbb, :osd32mp1, :x86_64, :npi_imx6ull, :grisp2, :mangopi_mq_pro, :srhub]
 
@@ -83,8 +83,7 @@ defmodule NervesLivebook.MixProject do
       {:vega_lite, "~> 0.1"},
       {:vintage_net_mobile, "~> 0.11", targets: @cellular_targets},
       {:vintage_net_qmi, "~> 0.3", targets: @cellular_targets},
-      {:oled, "~> 0.3.5", github: "ringvold/oled", targets: @all_targets},
-      {:lcd_display, path: "../lcd_display", targets: @all_targets},
+      {:oled, "~> 0.3.6", targets: @all_targets},
       {:chisel, "~> 0.2.0"},
 
       # Nerves system dependencies
@@ -101,8 +100,7 @@ defmodule NervesLivebook.MixProject do
       {:nerves_system_grisp2, "~> 0.2", runtime: false, targets: :grisp2},
       {:nerves_system_mangopi_mq_pro, "~> 0.2.4", runtime: false, targets: :mangopi_mq_pro},
       {:nerves_system_srhub, "~> 0.25", runtime: false, targets: :srhub},
-      {:nerves_system_rpi_wifi,
-       github: "ringvold/nerves_system_rpi_wifi", runtime: false, targets: :rpi_wifi, nerves: [compile: true]},
+      {:nerves_system_rpi_wifi, path: "../custom_rpi", runtime: false, targets: :rpi_wifi, nerves: [compile: true]},
 
       # Compile-time only
       {:credo, "~> 1.6", only: :dev, runtime: false},
