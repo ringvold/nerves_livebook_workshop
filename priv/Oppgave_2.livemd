@@ -65,7 +65,7 @@ Legg merke til at både funksjoner og moduler krever at vi wrapper innholdet i e
 Greeting.hello("world")
 ```
 
-Vi ønsker nå å lage en modul, `Button`, som tar i mot staten til `:circuits_gpio`. Dette oppnår vi ved å bruke `receive` – en innebygd måte for Elixir å ta imot meldinger vi kan case på. Circuits-biblioteket tar seg av å sende meldinger om knappens state, mens vi må sørge for å ta meldingene imot.
+Vi ønsker nå å lage en modul, `Button`, som tar i mot staten til `:circuits_gpio`. Dette oppnår vi ved å bruke `receive` – en innebygd måte for Elixir å ta imot meldinger. Disse meldingene kan vi blant annet case på slik at vi kan håndtere ulike meldinger forskjellig. Circuits-biblioteket tar seg av å sende meldinger om knappens state, mens vi må sørge for å ta meldingene imot.
 
 Fra `:circuits_gpio` får vi 3 ulike parametere; hvilken GPIO-pin vi mottar en melding fra, la oss merke den `_pin`; tidspunkt for melding, la oss merke den `_timestamp`; selve knappetilstanden, la oss merke den `button_state`. I `Button`-modulen nedenfor lytter vi på meldinger fra `:circuits_gpio` og skriver ut `button_state` for hvert knappetrykk vi gjør.
 
