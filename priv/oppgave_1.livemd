@@ -33,7 +33,7 @@ Her finner vi blant annet `brightness`, og vi kan lese av den nåværende `brigh
 File.read(Path.join(led, "brightness"))
 ```
 
-Vi ønsker nå å sørge for at det valgte LED-lyset er i en kjent tilstand (avskrudd) før vi begynner å leke med det. I vårt tilfelle gjøres dette ved å først sette `trigger`-typen til `none`, for deretter å sette `brightness` til `0`. Vi kan endre tilstanden til LED-lys ved å benytte `File.write/2` (her indikerer `/2` at funksjonen `File.write` tar inn to parametere). Første parameter er hele pathen til parameteren vi ønsker å oppdatere, andre parameter er den nye tilstanden/verdien vi ønsker å oppdatere til. Følg gjerne med på LED-lysene på din Raspberry Pi når du kjører disse kommandoene og se om det skjer en endring!
+Vi ønsker nå å sørge for at det valgte LED-lyset er i en kjent tilstand (avskrudd) før vi begynner å leke med det. I vårt tilfelle gjøres dette ved å først sette `trigger`-typen til `none`, for deretter å sette `brightness` til `0`. Vi kan endre tilstanden til LED-lys ved å benytte `File.write/2` (her indikerer `/2` at funksjonen `File.write` tar inn to parametere). Første parameter er hele pathen til LED-lyset vi ønsker å oppdatere, andre parameter er den nye tilstanden/verdien vi ønsker å oppdatere til. Følg gjerne med på LED-lysene på din Raspberry Pi når du kjører disse kommandoene og se om det skjer en endring!
 
 ```elixir
 File.write(Path.join(led, "trigger"), "none")
@@ -80,6 +80,10 @@ File.read!(Path.join(led, "brightness"))
 Triggere for `heartbeat` og `timer` som pulserer med en fast frekvens er vel og bra, men det er liksom ikke _vårt_ lysmønster. Målet med denne oppgaven er å lage et eget mønster.
 
 Det er flere måter å få til dette på. Prøv litt på egenhånd – husk, internettet er din venn!
+
+```elixir
+# Din kode her
+```
 
 <br/>
 <br/>
