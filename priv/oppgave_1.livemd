@@ -72,7 +72,7 @@ For å styre LED-lyset med `brightness`-filen kan vi igjen sette `trigger` til `
 
 ```elixir
 File.write(Path.join(led, "trigger"), "none")
-File.read!(Path.join(led, "brightness"), "0")
+File.read!(Path.join(led, "brightness"))
 ```
 
 ## (valgfritt) Lag ditt eget lysmønster
