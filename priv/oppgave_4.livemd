@@ -1,0 +1,45 @@
+# OLED skjerm
+
+For å styre skjermen så har vi biblioteket [oled](https://github.com/pappersverk/oled). Dette lar oss enkelt tegne primitive figurer på skjermen som piksler, trekanter, linjer, osv. Vi har lastet inn biblioteket fra før av og det er tilgjengelig under `NervesLivebook.OLED`.
+
+## Tekst til skjermen
+
+For å få til å vise komplekse ting some tekst(!) så kan vi kombinere `oled` bilbioteket med [Chisel](https://hexdocs.pm/chisel/readme.html) som oversetter tekststreng gitt en font til punkter i to dimensjoner.
+
+```elixir
+# En funksjon som tar imot koordinat x og y og oversetter det til en piksel på skjermen
+put_pixel = fn x, y do
+  NervesLivebook.OLED.put_pixel(x, y)
+end
+
+# Vi har en fontfil liggende fra før av som vi kan gjenbruke
+{:ok, font} = Chisel.Font.load("/fonts/cure.bdf")
+
+# Sørg for at skjermen starter med ett blankt utgangspunkt
+NervesLivebook.OLED.clear()
+
+# Bruk Chisel til å oversette teksten til pikselpunkter
+Chisel.Renderer.draw_text("Hei verden!", 10, 10, font, put_pixel, size_x: 2, size_y: 2)
+
+# Dytt bilet vårt ut
+NervesLivebook.OLED.display()
+```
+
+Forhåpentligvis så har du nå fått en liten hilsen. Som man ser så vet `Chisel` ingenting om hvordan skjermen fungerer og forholder seg kun til at den får en funksjon som i dette tilfellet tar seg av oversetting til `oled` bilbioteket.
+Videre er vi selv ansvarlig for å fjerne eksisterende innehold på skjermen og fortelle når den skal tegne ut nye endringer til skjermen. Ta gjerne en titt på hva som skjer om du kommenterer ut disse kallene enkeltvis i koden ovenfor.
+
+## Tekst og verdier
+
+Hva om vi ønsker å vise temperaturverdiene vi hentet ut i oppgave 3 til skjermen? Med `oled` og `Chisel` så skal dette la seg gjøre!
+
+```elixir
+# Din kode her
+```
+
+### Grafe verdiene
+
+For å lage en graf så trenger vi kun å forholde oss til de primitive operasjonene som `oled` bibliteket gir oss. Ta en titt på GitHub siden og se om du får tenget ut en strek eller to. Deretter kan vi begynne å kombinere fast utlesning av temperaturen og kontinuerlig oppdatering av grafen ut mot skjermen.
+
+```elixir
+# Din kode her
+```
