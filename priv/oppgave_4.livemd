@@ -7,7 +7,7 @@ For å styre skjermen så har vi biblioteket [oled](https://github.com/pappersve
 For å få til å vise komplekse ting some tekst(!) så kan vi kombinere `oled` bilbioteket med [Chisel](https://hexdocs.pm/chisel/readme.html) som oversetter tekststreng gitt en font til punkter i to dimensjoner.
 
 ```elixir
-# En funksjon som tar imot kooardinat x og y og oversette det til en piksel på skjermen
+# En funksjon som tar imot koordinat x og y og oversetter det til en piksel på skjermen
 put_pixel = fn x, y do
   NervesLivebook.OLED.put_pixel(x, y)
 end
