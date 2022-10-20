@@ -8,7 +8,7 @@ For å få til å vise komplekse ting some tekst(!) så kan vi kombinere `oled` 
 
 ```elixir
 # En funksjon som tar imot koordinat x og y og oversetter det til en piksel på skjermen
-put_pixel = fn x, y do
+put_pixel = fn x, y ->
   NervesLivebook.OLED.put_pixel(x, y)
 end
 
